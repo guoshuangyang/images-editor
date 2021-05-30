@@ -13,6 +13,11 @@
     "rollup",
     "typescript"
   ],
+  "homepage": "https://github.com/guoshuangyang/images-editor/main/README.md",
+  "repository": "guoshuangyang/images-editor/",
+  "bugs": {
+    "url": "https://github.com/guoshuangyang/images-editor/issues"
+  },
   "author": {
     "name": "yang",
     "email": "guoshuangyang0@163.com"
