@@ -6,7 +6,7 @@ import { isDom } from './common/judge'
  * @param {*} option 相关的配置
  * @returns 
  */
-export default function CanvasEditor(ele, option) {
+export default function imagesEditor(ele, option) {
     let contentDom;
     // 判断是不是dom元素，否则抛出异常
     try {
