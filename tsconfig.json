@@ -11,7 +11,7 @@
       "es7"
     ],
     "strict": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "outDir": "out-tsc",
     "rootDir": "./"
   },
