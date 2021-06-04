@@ -1,6 +1,6 @@
 {
   "name": "images-editor",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.3",
   "main": "lib/main.js",
   "files": [
     "lib"
@@ -21,8 +21,8 @@
   "publishConfig": {
     "registry": "http://registry.npmjs.org/"
   },
-  "homepage": "https://github.com/guoshuangyang/images-editor/main/README.md",
-  "repository": "guoshuangyang/images-editor/",
+  "homepage": "https://github.com/guoshuangyang/images-editor",
+  "repository": "https://github.com/guoshuangyang/images-editor",
   "bugs": {
     "url": "https://github.com/guoshuangyang/images-editor/issues"
   },
