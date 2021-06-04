@@ -1,18 +1,33 @@
 import rollupTypescript from 'rollup-plugin-typescript2'
-import serve from 'rollup-plugin-serve'
+// import serve from 'rollup-plugin-serve'
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import json from 'rollup-plugin-json';
-import { babel } from '@rollup/plugin-babel';
+import { /*babel,*/getBabelOutputPlugin } from '@rollup/plugin-babel';
 import pkg from './package.json'
+// import babel from 'rollup-plugin-babel';
 // import commonjs from '@rollup/plugin-commonjs';
 
+const createBanner = () => {
+    return `/*!
+    * ${pkg.name} v${pkg.version}
+    * (c) ${new Date().getFullYear()} yyy
+    * @license MIT
+    */`
+}
 const plugins = [
     // commonjs(),
     nodeResolve(),
+    // babel({
+    //     exclude: "node_modules/**",
+    //     babelHelpers: 'bundled'
+    // }),
     json(),
     rollupTypescript(),
-    babel({ babelHelpers: 'bundled' }),
-    serve(),
+    getBabelOutputPlugin({
+        allowAllFormats: true,
+        presets: ['@babel/preset-env']
+    })
+    // serve(),
 ]
 const outArr = [
     { out: 'umd', file: pkg.main },
@@ -25,7 +40,7 @@ export default {
         return {
             file: item.file,
             format: item.out,
-            banner: '/* my-library version ' + pkg.version + ' */',
+            banner: createBanner(),
             footer: '/* follow me ! */',
             name: 'ImagesEditor'
         }
