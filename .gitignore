@@ -3,4 +3,6 @@ lib
 .idea
 dist
 out-tsc
-
+# sh
+.sh
+*publish*
