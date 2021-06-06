@@ -7,3 +7,9 @@ export const isDom = (element: string | HTMLElement ) => {
         ? element instanceof HTMLElement
         : element && typeof element === 'object' && element.nodeType === 1 && typeof element.nodeName === 'string';
 }
+
+
+export const isString = function(str:any){
+    if(Object.prototype.toString.call(str) === "[object String]") return true;
+    return false;
+}

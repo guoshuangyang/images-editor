@@ -10,7 +10,6 @@ export default function GetElement(id: string | HTMLElement): HTMLElement {
     } else {
         ele = id
     }
-    console.log(ele)
     if(!ele) throw new Error("is not a HtmlElement");
     return ele
 }

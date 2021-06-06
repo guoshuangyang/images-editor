@@ -1,3 +1,4 @@
+import { isString } from '../common/judge'
 export default class drawImage {
     /**
      * 创建一个图片的背景
@@ -9,10 +10,22 @@ export default class drawImage {
      * @param dh canvas的高度
      */
     constructor(ctx: CanvasRenderingContext2D, image: CanvasImageSource, dx: number, dy: number, dw: number, dh: number) {
-        try {
-            ctx.drawImage(image, dx, dy, dw, dh)
-        } catch (err) {
-            throw new Error("drawImage is failed");
+        let image1: any;
+        function draw():void{
+            try {
+                ctx.drawImage(image1, dx, dy, dw, dh)
+            } catch (err) {
+                console.error("drawImage is failed")
+            }
+        }
+        // check image 
+        if (isString(image)){
+            image1 = new Image(dw, dy); // Using optional size for image
+            image1.onload = draw
+            image1.src = image
+        }else {
+            image1 = image
+            draw()
         }
     }
 }
