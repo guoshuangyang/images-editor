@@ -3,7 +3,7 @@ export const update = function (ctx: CanvasRenderingContext2D,colorOption: objec
     const options = {
         borderColor: 'red',
         textColor: 'black',
-        fillColor: 'transparent',
+        fillColor: 'red',
         borderStyle: 'rect'
     }
     let option = Object.assign(options,colorOption)
