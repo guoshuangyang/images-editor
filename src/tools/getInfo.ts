@@ -40,6 +40,7 @@ export function getEventPos(start: [x: number, y: number], end: [x: number, y: n
         w: 0,
         h: 0
     }
+
     // 计算开始和结束的位置
     if (end[0] > start[0]) {
         if (end[1] > start[1]) {
@@ -54,14 +55,13 @@ export function getEventPos(start: [x: number, y: number], end: [x: number, y: n
         }
     } else {
         if (end[1] > start[1]) {
-            // 右下角是结束位置
-            obj.leftTop = [end[0], end[1]]
-            obj.rightBottom = [start[0], start[1]]
+            obj.leftTop = [end[0], start[1]]
+            obj.rightBottom = [start[0], end[1]]
             obj.center = [start[0] - end[0],end[1]-start[1]]
 
         } else {
-            obj.leftTop = [end[0], start[1]]
-            obj.rightBottom = [start[0], end[1]]
+            obj.leftTop = [end[0], end[1]]
+            obj.rightBottom = [start[0], start[1]]
             obj.center = [start[0] - end[0],start[1]-end[1]]
         }
     }

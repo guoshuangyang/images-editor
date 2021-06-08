@@ -112,6 +112,7 @@ export default class ImagesEditor {
             ctx.clearRect(0, 0, this.width, this.height)
             // 绘制数据内容，内容一般存在内存中
             this.data.graph.forEach(item => {
+                console.log(item)
                 // 绘制
                 // @ts-ignore
                 drawRect(ctx, item.leftTop[0], item.leftTop[1], item.w, item.h)
