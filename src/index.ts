@@ -1,5 +1,5 @@
-import * as packageInfo from '../package.json'
-import { drawImage, drawRect, getCtx } from './tools/drawImage'
+import packageInfo from '../package.json'
+import { drawCircle, drawEllipse, drawImage, drawRect, getCtx } from './tools/drawImage'
 import { GetElement, getCanvasPosition, getEventPos } from './tools/getInfo'
 import { update, destroy } from './config/index'
 import { throttle } from './common/common'
@@ -33,7 +33,13 @@ interface CtxOption {
 }
 
 interface Data {
-    graph: object[];
+    graph: {
+        leftTop: number[];
+        rightBottom: number[];
+        center: number[];
+        w: number,
+        h: number
+    }[];
 }
 
 
@@ -112,10 +118,10 @@ export default class ImagesEditor {
             ctx.clearRect(0, 0, this.width, this.height)
             // 绘制数据内容，内容一般存在内存中
             this.data.graph.forEach(item => {
-                console.log(item)
-                // 绘制
                 // @ts-ignore
-                drawRect(ctx, item.leftTop[0], item.leftTop[1], item.w, item.h)
+                // drawRect(ctx, item.leftTop[0], item.leftTop[1], item.w, item.h)
+                drawEllipse(ctx,item.center[0],item.center[1], item.w/2,item.h/2)
+                // drawCircle(ctx,item.center[0],item.center[1],item.h/2)
             })
         }
         const init = () => {
@@ -148,7 +154,10 @@ export default class ImagesEditor {
                             if (canvasStatus.drawShape === 'Rect') {
                                 // 判断位置，直接渲染
                                 let obj = getEventPos([eventData.initX, eventData.initY], [mousePos.x, mousePos.y])
-                                drawRect(ctx, obj.leftTop[0], obj.leftTop[1], obj.w, obj.h)
+                                // drawRect(ctx, obj.leftTop[0], obj.leftTop[1], obj.w, obj.h)
+                                drawEllipse(ctx,obj.center[0],obj.center[1], obj.w/2, obj.h/2)
+                                // console.log(obj.center[0],obj.center[1],obj.h)
+                                // drawCircle(ctx,obj.center[0],obj.center[1],obj.h/2)
                             }
                             break;
                     }

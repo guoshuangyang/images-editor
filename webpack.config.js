@@ -28,12 +28,14 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         library: {
             name: "ImagesEditor",
-            type: 'var',
+            type: 'window',
             export: 'default',
         },
     },
     plugins: [
-        new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            template: './index.html'
+        }),
         new webpack.BannerPlugin(`pacakge version：${packageInfo.version}`)
     ],
 

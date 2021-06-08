@@ -9,7 +9,7 @@ npm i images-editor -S
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/images-editor@0.0.1-beta.4/lib/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/images-editor/lib/script.js"></script>
 ```
 
 ### Use
