@@ -1,18 +1,18 @@
 import { isString } from '../common/judge'
 /**
      * 创建一个图片的背景
-     * @param ctx 
+     * @param context 
      * @param image 
      * @param dx x轴坐标
      * @param dy y轴坐标
      * @param dw canvas的宽度
      * @param dh canvas的高度
      */
-export function drawImage(ctx: CanvasRenderingContext2D, image: CanvasImageSource, dx: number, dy: number, dw: number, dh: number) {
+export function drawImage(context: CanvasRenderingContext2D, image: CanvasImageSource, dx: number, dy: number, dw: number, dh: number) {
     let image1: any;
     function draw(): void {
         try {
-            ctx.drawImage(image1, dx, dy, dw, dh)
+            context.drawImage(image1, dx, dy, dw, dh)
         } catch (err) {
             console.error("drawImage is failed")
         }
@@ -20,6 +20,7 @@ export function drawImage(ctx: CanvasRenderingContext2D, image: CanvasImageSourc
     // check image 
     if (isString(image)) {
         image1 = new Image(dw, dy); // Using optional size for image
+        image1.crossOrigin = "Anonymous";
         image1.onload = draw
         image1.src = image
     } else {
@@ -30,11 +31,11 @@ export function drawImage(ctx: CanvasRenderingContext2D, image: CanvasImageSourc
 
 // 获取画笔
 export const getCtx = function (canvas: HTMLCanvasElement) {
-    const ctx = canvas.getContext('2d')
-    if (!ctx) {
+    const context = canvas.getContext('2d')
+    if (!context) {
         throw new Error("canvas is nonsupport !");
     }
-    return ctx
+    return context
 }
 
 /**
@@ -45,49 +46,49 @@ export const getCtx = function (canvas: HTMLCanvasElement) {
  * @param r 
  * @param fillColor 
  */
-export const drawCircle = function (ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, fillColor = 'red') {
+export const drawCircle = function (context: CanvasRenderingContext2D, cx: number, cy: number, r: number, fillColor = 'red') {
     // 将canvas状态放入栈中
-    ctx.save()
-    ctx.strokeStyle = fillColor
+    context.save()
+    context.strokeStyle = fillColor
     // 开始绘制路径
-    ctx.beginPath()
+    context.beginPath()
     // 绘制圆形 --
-    ctx.arc(cx, cy, r, 0, 2 * Math.PI, true)
+    context.arc(cx, cy, r, 0, 2 * Math.PI, true)
     // 绘制填充
-    // ctx.fill()
+    // context.fill()
     // 绘制边框
-    ctx.stroke()
+    context.stroke()
     // 关闭绘制
-    ctx.closePath()
+    context.closePath()
     // 恢复默认的状态
-    ctx.restore()
+    context.restore()
 }
 
 /**
  * 绘制矩形 --- 绘制正圆形的时候会出现宽大于高，依旧出来圆形，但是不是常规意义的圆形
- * @param ctx 画笔
+ * @param context 画笔
  * @param rx 
  * @param ry 
  * @param rw 
  * @param rh 
  * @param fillColor 
  */
-export const drawRect = function (ctx: CanvasRenderingContext2D, rx: number, ry: number, rw: number, rh: number, fillColor = 'red') {
+export const drawRect = function (context: CanvasRenderingContext2D, rx: number, ry: number, rw: number, rh: number, fillColor = 'red') {
     // 将canvas状态放入栈中
-    ctx.save()
-    ctx.strokeStyle = fillColor
+    context.save()
+    context.strokeStyle = fillColor
     // 开始绘制路径
-    ctx.beginPath()
+    context.beginPath()
     // 绘制矩形 --
-    ctx.strokeRect(rx, ry, rw, rh)
+    context.strokeRect(rx, ry, rw, rh)
     // 绘制填充
-    // ctx.fill()
+    // context.fill()
     // 绘制边框
-    ctx.stroke()
+    context.stroke()
     // 关闭绘制
-    ctx.closePath()
+    context.closePath()
     // 恢复默认的状态
-    ctx.restore()
+    context.restore()
 }
 
 /**
@@ -98,7 +99,7 @@ export const drawRect = function (ctx: CanvasRenderingContext2D, rx: number, ry:
  * @param a x轴半径宽度
  * @param b y轴半径高度
  */
-export const  drawEllipse = function(context: CanvasRenderingContext2D, x:number, y:number, a:number, b:number)  {
+export const drawEllipse = function (context: CanvasRenderingContext2D, x: number, y: number, a: number, b: number) {
     var ox = 0.5 * a,
         oy = 0.6 * b;
     context.save();
@@ -126,3 +127,34 @@ export const  drawEllipse = function(context: CanvasRenderingContext2D, x:number
 //     // ctx.fillStyle = "rgba(0,0,0,.2)";
 //     ctx.fill();
 // }
+
+/**
+ * 绘制曲线或者线段什么的
+ */
+export const drawLine = function (context: CanvasRenderingContext2D, option: any) {
+    context.save();
+    context.strokeStyle = 'red'
+    context.beginPath();
+    context.moveTo(option.pos[0].x, option.pos[0].y);
+    for (let i = 1; i < option.pos.length; i++) {
+        context.lineTo(option.pos[i].x, option.pos[i].y)
+    }
+    context.stroke();
+    context.restore();
+}
+
+
+/**
+ * 根据传值进行不同的渲染样式
+ * @param option 
+ */
+export const drawByMouse = function (option: any) {
+
+}
+
+// ctx.beginPath();
+//     ctx.moveTo(option.pos[0].x, option.pos[0].y);
+// [{ x: 25, y: 9 }, { x: 68, y: 7 }, { x: 82, y: 9 }, { x: 93, y: 12 }, { x: 102, y: 14 }, { x: 109, y: 25 }, { x: 111, y: 34 }, { x: 90, y: 48 }, { x: 66, y: 60 }, { x: 12, y: 59 }, { x: 2, y: 40 }, { x: 17, y: 28 }, { x: 61, y: 17 }, { x: 79, y: 21 }, { x: 84, y: 32 }, { x: 47, y: 59 }, { x: 5, y: 46 }, { x: 19, y: 16 }, { x: 74, y: 10 }, { x: 86, y: 12 }].forEach(item=>{
+//     ctx.lineTo(item.x,item.y)
+// })
+// ctx.stroke();

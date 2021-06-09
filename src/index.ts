@@ -1,5 +1,5 @@
 import packageInfo from '../package.json'
-import { drawCircle, drawEllipse, drawImage, drawRect, getCtx } from './tools/drawImage'
+import { drawCircle, drawEllipse, drawImage, drawLine, drawRect, getCtx } from './tools/drawImage'
 import { GetElement, getCanvasPosition, getEventPos } from './tools/getInfo'
 import { update, destroy } from './config/index'
 import { throttle } from './common/common'
@@ -38,7 +38,7 @@ interface Data {
         rightBottom: number[];
         center: number[];
         w: number,
-        h: number
+        h: number,
     }[];
 }
 
@@ -56,10 +56,13 @@ export default class ImagesEditor {
     ctx: CanvasRenderingContext2D;
     version: string;
     data: Data;
+    option: Options;
     updateConfig: Function;
     destroy: Function;
+    canvasImage: HTMLCanvasElement;
     // canvasBox: HTMLElement;
     constructor(ele: string | HTMLElement, option: Options) {
+        this.option = option
         let _that = this
         /**
          * @interface canvasStatus
@@ -103,6 +106,7 @@ export default class ImagesEditor {
         imageBox.style.top = '0px'
         imageBox.style.zIndex = '-1'
         imageBox.appendChild(canvasImage)
+        this.canvasImage = canvasImage
         canvasBox.appendChild(imageBox)
         drawImage(getCtx(canvasImage), option.image, option.x ? option.x : 0, option.y ? option.y : 0, option.w ? option.w : this.width, option.y ? option.y : this.height)
         // 圈选层
@@ -120,17 +124,26 @@ export default class ImagesEditor {
             this.data.graph.forEach(item => {
                 // @ts-ignore
                 // drawRect(ctx, item.leftTop[0], item.leftTop[1], item.w, item.h)
-                drawEllipse(ctx,item.center[0],item.center[1], item.w/2,item.h/2)
+                // drawEllipse(ctx,item.center[0],item.center[1], item.w/2,item.h/2)
                 // drawCircle(ctx,item.center[0],item.center[1],item.h/2)
+                drawLine(ctx,item)
             })
         }
         const init = () => {
             reDraw()
-            let eventData = {
+            interface TemplateDate{
+                initX: number;
+                initY: number;
+                status: number;
+                pos: {x: number,y: number}[];
+            }
+
+            let eventData:TemplateDate = {
                 initX: 0,
                 initY: 0,
                 // 1 'down', 2 'moving' 0 null
-                status: 0
+                status: 0,
+                pos: []
             }
             // 合并一次绘制的形状
             canvasStatus.drawShape = option.shape ? option.shape : 'Rect';
@@ -153,16 +166,18 @@ export default class ImagesEditor {
                             reDraw()
                             if (canvasStatus.drawShape === 'Rect') {
                                 // 判断位置，直接渲染
-                                let obj = getEventPos([eventData.initX, eventData.initY], [mousePos.x, mousePos.y])
+                                // let obj = getEventPos([eventData.initX, eventData.initY], [mousePos.x, mousePos.y])
                                 // drawRect(ctx, obj.leftTop[0], obj.leftTop[1], obj.w, obj.h)
-                                drawEllipse(ctx,obj.center[0],obj.center[1], obj.w/2, obj.h/2)
+                                // drawEllipse(ctx,obj.center[0],obj.center[1], obj.w/2, obj.h/2)
                                 // console.log(obj.center[0],obj.center[1],obj.h)
                                 // drawCircle(ctx,obj.center[0],obj.center[1],obj.h/2)
+                                eventData.pos.push({x: mousePos.x, y: mousePos.y})
+                                drawLine(ctx,eventData)
                             }
                             break;
                     }
                 };
-            }, 100, 100))
+            }, 10, 30))
             // 抬起事件
             canvasDom.addEventListener('mouseup', function (event: MouseEvent) {
                 const mousePos = getCanvasPosition(event)
@@ -170,9 +185,9 @@ export default class ImagesEditor {
                     // 处理数据，处理成左上角和右下角，形状以及一些别的配置样式一并写入对象中
                     let obj1 = getEventPos([eventData.initX, eventData.initY], [mousePos.x, mousePos.y])
                     // 绘制完毕将数据推入操作数据栈中
-                    _that.data.graph.push(Object.assign(obj1, { drawShape: canvasStatus.drawShape }))
-                    console.log(_that.data, ctx.strokeStyle)
+                    _that.data.graph.push(Object.assign(obj1, { drawShape: canvasStatus.drawShape },{pos: eventData.pos}))
                     eventData.status = 0
+                    eventData.pos = []
                 };
             })
         }
@@ -182,11 +197,30 @@ export default class ImagesEditor {
         this.destroy = function () {
             destroy(ctx, canvasBox)
         }
+    }
+
+    exportImg(){
+        // todo 优化导出 --- 导出的污染画布，还有跨域
 
 
-
-
-
-
+        // 先把所有数据在new出来的canvas上边进行渲染，然后进行一个静默导出
+        let canvasTemp = document.createElement('canvas')
+        canvasTemp.width = this.width
+        canvasTemp.height = this.height
+        // 绘制数据
+        const ctx = getCtx(canvasTemp)
+        // ctx.drawImage(this.canvasImage, this.option.x ? this.option.x : 0, this.option.y ? this.option.y : 0,  this.option.w ? this.option.w : this.width, this.option.y ? this.option.y : this.height);
+        drawImage(ctx, this.option.image, this.option.x ? this.option.x : 0, this.option.y ? this.option.y : 0, this.option.w ? this.option.w : this.width, this.option.y ? this.option.y : this.height)
+        this.data.graph.forEach(item => {
+            // @ts-ignore
+            // drawRect(ctx, item.leftTop[0], item.leftTop[1], item.w, item.h)
+            // drawEllipse(ctx,item.center[0],item.center[1], item.w/2,item.h/2)
+            // drawCircle(ctx,item.center[0],item.center[1],item.h/2)
+            drawLine(ctx,item)
+        })
+        return canvasTemp.toDataURL("image/jpeg", 1.0)
+        // let image = new Image();
+	    // image.src = canvasTemp.toDataURL("image/png");
+        // return canvasTemp.toDataURL("image/png")
     }
 }
