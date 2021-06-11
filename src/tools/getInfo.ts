@@ -6,10 +6,13 @@
 export const GetElement = function (id: string | HTMLElement): HTMLElement {
     let ele;
     if (typeof id === 'string') {
+        console.log('string',id)
         ele = document.getElementById(id)
     } else {
         ele = id
     }
+    console.log('ele',ele);
+    
     if (!ele) throw new Error("is not a HtmlElement");
     return ele
 }

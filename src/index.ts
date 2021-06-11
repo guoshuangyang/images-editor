@@ -88,26 +88,30 @@ export default class ImagesEditor {
         const canvasDom: HTMLCanvasElement = document.createElement('canvas')
         // 背景图片层
         const canvasImage: HTMLCanvasElement = document.createElement('canvas')
-        const imageBox: HTMLElement = document.createElement('div')
+        // const imageBox: HTMLElement = document.createElement('div')
         this.data = {
             graph: []
         }
         this.height = canvasBox.offsetHeight
         this.width = canvasBox.offsetWidth
+        canvasDom.style.position = 'absolute'
+        canvasDom.style.zIndex='1'
+        canvasDom.style.left = '0px'
+        canvasDom.style.top = '0px'
         canvasDom.height = this.height
         canvasDom.width = this.width
         // 绘制背景图片层
-        imageBox.style.width = this.width + 'px'
-        imageBox.style.height = this.height + 'px'
+        // imageBox.style.width = this.width + 'px'
+        // imageBox.style.height = this.height + 'px'
         canvasImage.height = this.height
         canvasImage.width = this.width
-        imageBox.style.position = 'absolute'
-        imageBox.style.left = '0px'
-        imageBox.style.top = '0px'
-        imageBox.style.zIndex = '-1'
-        imageBox.appendChild(canvasImage)
+        canvasImage.style.position = 'absolute'
+        canvasImage.style.left = '0px'
+        canvasImage.style.top = '0px'
+        canvasImage.style.zIndex = '0'
+        // canvasImage.appendChild(canvasImage)
         this.canvasImage = canvasImage
-        canvasBox.appendChild(imageBox)
+        canvasBox.appendChild(canvasImage)
         drawImage(getCtx(canvasImage), option.image, option.x ? option.x : 0, option.y ? option.y : 0, option.w ? option.w : this.width, option.y ? option.y : this.height)
         // 圈选层
         canvasBox.appendChild(canvasDom)
@@ -157,7 +161,9 @@ export default class ImagesEditor {
                 eventData.status = 1
             })
             canvasDom.addEventListener('mousemove', throttle(function (event: MouseEvent) {
+                
                 const mousePos = getCanvasPosition(event)
+                console.log(mousePos);
                 if (eventData.status !== 0) {
                     // 根据形状进行绘制
                     switch (canvasStatus.eventStatus) {

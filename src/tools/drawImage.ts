@@ -12,11 +12,13 @@ export function drawImage(context: CanvasRenderingContext2D, image: CanvasImageS
     let image1: any;
     function draw(): void {
         try {
+            context.globalCompositeOperation="destination-over"
             context.drawImage(image1, dx, dy, dw, dh)
         } catch (err) {
             console.error("drawImage is failed")
         }
     }
+    console.log(image)
     // check image 
     if (isString(image)) {
         image1 = new Image(dw, dy); // Using optional size for image

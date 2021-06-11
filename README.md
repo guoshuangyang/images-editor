@@ -33,3 +33,6 @@ npm i images-editor -S
 </script>
 ```
 
+`bugs` : 需要进行鼠标事件的判定，如果只是单击并且没移动，默认事件没发生
+
+
