@@ -1,85 +1,43 @@
-import packageInfo from '../package.json'
-import { drawCircle, drawEllipse, drawImage, drawLine, drawRect, getCtx } from './tools/drawImage'
-import { GetElement, getCanvasPosition, getEventPos } from './tools/getInfo'
-import { update, destroy } from './config/index'
-import { throttle } from './common/common'
-/**
- * @param image 必要的参数，图片
- * @param x  绘制的x坐标位置
- * @param y  绘制的y坐标的开始
- * @param w  绘制的宽度
- * @param h  绘制图片的高度
- */
-interface Options {
-    image: CanvasImageSource;
-    x?: number;
-    y?: number;
-    w?: number;
-    h?: number;
-    shape?: string;
-    eventStatus?: number;
-}
-/**
- * borderColor 边框的颜色
- * borderStyle 边框的类型
- * fillColor  绘制的填充色
- * textColor 文字颜色
- */
-interface CtxOption {
-    borderColor?: string;
-    textColor?: string;
-    fillColor?: string;
-    borderStyle?: string;
-}
-
-interface Data {
-    graph: {
-        leftTop: number[];
-        rightBottom: number[];
-        center: number[];
-        w: number,
-        h: number,
-    }[];
-}
-
-
+import { version } from '../../package.json'
+import { drawCircle, drawEllipse, drawImage, drawLine, drawRect, getCtx } from './draw'
+import { GetElement, getCanvasPosition, getEventPos } from './getInfo'
+import { update, destroy } from '../config'
+import { throttle } from '../tools'
+import * as datas from './data'
 /**
  * 返回一个canvas编辑器对象
  * @param {*} ele dom元素或者id
  * @param {*} option 相关的配置
  * @returns
  */
-export default class ImagesEditor {
+let { data, option, ctx, canvasImage } = datas
 
-    height: number;
-    width: number;
-    ctx: CanvasRenderingContext2D;
-    version: string;
-    data: Data;
-    option: Options;
+export default class ImagesEditor {
+    // 数据
+    // private data: Data;
+    // 宽高
+    private height: number;
+    private width: number;
+    // 画笔工具
+    // private ctx: CanvasRenderingContext2D;
+    // 版本
+    public version: string;
+    // 请求参数 可通过updateConfig方法修改
+    // private option: Options;
+    // 更新配置，比如更新颜色，粗细
     updateConfig: Function;
     destroy: Function;
-    canvasImage: HTMLCanvasElement;
-    // canvasBox: HTMLElement;
-    constructor(ele: string | HTMLElement, option: Options) {
-        this.option = option
-        let _that = this
-        /**
-         * @interface canvasStatus
-         * @description eventStatus 鼠标事件出发后事件的类型
-         * @description drawShape  鼠标事件的触发绘制之后的形状
-         */
-        interface canvasStatus {
-            eventStatus: number;
-            // 绘制的形状
-            drawShape: string
-        }
+    // canvasImage: HTMLCanvasElement;
+
+    /**
+     * 实例化编辑器对象
+     * @param ele 元素id或者dom元素
+     * @param option
+     */
+    constructor(ele: string | HTMLElement, options: Options) {
+        option = options
         const canvasStatus: canvasStatus = {
-            // 鼠标事件处于什么状态，如果处于1，那就是绘制形状，
-            // 2是自定义绘制形状
-            // 3是输入文字
             eventStatus: 0,
-            // 绘制的形状
             drawShape: 'Rect'
         }
         // init 
@@ -87,9 +45,8 @@ export default class ImagesEditor {
         canvasBox.style.position = 'relative'
         const canvasDom: HTMLCanvasElement = document.createElement('canvas')
         // 背景图片层
-        const canvasImage: HTMLCanvasElement = document.createElement('canvas')
-        // const imageBox: HTMLElement = document.createElement('div')
-        this.data = {
+        canvasImage = document.createElement('canvas')
+        data = {
             graph: []
         }
         this.height = canvasBox.offsetHeight
@@ -109,14 +66,11 @@ export default class ImagesEditor {
         canvasImage.style.left = '0px'
         canvasImage.style.top = '0px'
         canvasImage.style.zIndex = '0'
-        // canvasImage.appendChild(canvasImage)
-        this.canvasImage = canvasImage
         canvasBox.appendChild(canvasImage)
         drawImage(getCtx(canvasImage), option.image, option.x ? option.x : 0, option.y ? option.y : 0, option.w ? option.w : this.width, option.y ? option.y : this.height)
         // 圈选层
         canvasBox.appendChild(canvasDom)
-        const ctx = getCtx(canvasDom)
-        this.ctx = ctx
+        ctx = getCtx(canvasDom)
         // 获取图片画笔
         // 画笔配置的设置
         this.updateConfig = function (option: CtxOption) {
@@ -125,7 +79,7 @@ export default class ImagesEditor {
         const reDraw = (): void => {
             ctx.clearRect(0, 0, this.width, this.height)
             // 绘制数据内容，内容一般存在内存中
-            this.data.graph.forEach(item => {
+            data.graph.forEach(item => {
                 // @ts-ignore
                 // drawRect(ctx, item.leftTop[0], item.leftTop[1], item.w, item.h)
                 // drawEllipse(ctx,item.center[0],item.center[1], item.w/2,item.h/2)
@@ -191,14 +145,14 @@ export default class ImagesEditor {
                     // 处理数据，处理成左上角和右下角，形状以及一些别的配置样式一并写入对象中
                     let obj1 = getEventPos([eventData.initX, eventData.initY], [mousePos.x, mousePos.y])
                     // 绘制完毕将数据推入操作数据栈中
-                    _that.data.graph.push(Object.assign(obj1, { drawShape: canvasStatus.drawShape },{pos: eventData.pos}))
+                    data.graph.push(Object.assign(obj1, { drawShape: canvasStatus.drawShape },{pos: eventData.pos}))
                     eventData.status = 0
                     eventData.pos = []
                 };
             })
         }
         init()
-        this.version = packageInfo.version
+        this.version = version
         // destory
         this.destroy = function () {
             destroy(ctx, canvasBox)
@@ -206,9 +160,6 @@ export default class ImagesEditor {
     }
 
     exportImg(){
-        // todo 优化导出 --- 导出的污染画布，还有跨域
-
-
         // 先把所有数据在new出来的canvas上边进行渲染，然后进行一个静默导出
         let canvasTemp = document.createElement('canvas')
         canvasTemp.width = this.width
@@ -216,15 +167,19 @@ export default class ImagesEditor {
         // 绘制数据
         const ctx = getCtx(canvasTemp)
         // ctx.drawImage(this.canvasImage, this.option.x ? this.option.x : 0, this.option.y ? this.option.y : 0,  this.option.w ? this.option.w : this.width, this.option.y ? this.option.y : this.height);
-        drawImage(ctx, this.option.image, this.option.x ? this.option.x : 0, this.option.y ? this.option.y : 0, this.option.w ? this.option.w : this.width, this.option.y ? this.option.y : this.height)
-        this.data.graph.forEach(item => {
+        drawImage(ctx, option.image, option.x ? option.x : 0, option.y ? option.y : 0, option.w ? option.w : this.width, option.y ? option.y : this.height)
+        data.graph.forEach(item => {
             // @ts-ignore
             // drawRect(ctx, item.leftTop[0], item.leftTop[1], item.w, item.h)
             // drawEllipse(ctx,item.center[0],item.center[1], item.w/2,item.h/2)
             // drawCircle(ctx,item.center[0],item.center[1],item.h/2)
             drawLine(ctx,item)
+            console.log(drawLine)
         })
-        return canvasTemp.toDataURL("image/jpeg", 1.0)
+        return{
+            img: canvasTemp.toDataURL("image/jpeg", 1.0),
+            canvas: canvasTemp
+        }
         // let image = new Image();
 	    // image.src = canvasTemp.toDataURL("image/png");
         // return canvasTemp.toDataURL("image/png")

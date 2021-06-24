@@ -4,6 +4,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import { /*babel,*/getBabelOutputPlugin } from '@rollup/plugin-babel';
 import pkg from './package.json'
+import { uglify } from "rollup-plugin-uglify";
 // import babel from 'rollup-plugin-babel';
 // import commonjs from '@rollup/plugin-commonjs';
 
@@ -26,7 +27,8 @@ const plugins = [
     getBabelOutputPlugin({
         allowAllFormats: true,
         presets: ['@babel/preset-env']
-    })
+    }),
+    uglify()
     // serve(),
 ]
 const outArr = [
@@ -35,7 +37,7 @@ const outArr = [
 ]
 
 export default {
-    input: 'src/index.ts',
+    input: 'src/imagesEditor.ts',
     output: outArr.map(item => {
         return {
             file: item.file,

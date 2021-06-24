@@ -1,13 +1,13 @@
-import { isString } from '../common/judge'
+import { isString } from '../../tools'
 /**
-     * 创建一个图片的背景
-     * @param context 
-     * @param image 
-     * @param dx x轴坐标
-     * @param dy y轴坐标
-     * @param dw canvas的宽度
-     * @param dh canvas的高度
-     */
+ * 创建一个图片的背景
+ * @param context
+ * @param image
+ * @param dx x轴坐标
+ * @param dy y轴坐标
+ * @param dw canvas的宽度
+ * @param dh canvas的高度
+ */
 export function drawImage(context: CanvasRenderingContext2D, image: CanvasImageSource, dx: number, dy: number, dw: number, dh: number) {
     let image1: any;
     function draw(): void {
@@ -19,7 +19,7 @@ export function drawImage(context: CanvasRenderingContext2D, image: CanvasImageS
         }
     }
     console.log(image)
-    // check image 
+    // check image
     if (isString(image)) {
         image1 = new Image(dw, dy); // Using optional size for image
         image1.crossOrigin = "Anonymous";
@@ -42,11 +42,11 @@ export const getCtx = function (canvas: HTMLCanvasElement) {
 
 /**
  * 绘制圆形
- * @param ctx 
- * @param cx 
- * @param cy 
- * @param r 
- * @param fillColor 
+ * @param ctx
+ * @param cx
+ * @param cy
+ * @param r
+ * @param fillColor
  */
 export const drawCircle = function (context: CanvasRenderingContext2D, cx: number, cy: number, r: number, fillColor = 'red') {
     // 将canvas状态放入栈中
@@ -69,11 +69,11 @@ export const drawCircle = function (context: CanvasRenderingContext2D, cx: numbe
 /**
  * 绘制矩形 --- 绘制正圆形的时候会出现宽大于高，依旧出来圆形，但是不是常规意义的圆形
  * @param context 画笔
- * @param rx 
- * @param ry 
- * @param rw 
- * @param rh 
- * @param fillColor 
+ * @param rx
+ * @param ry
+ * @param rw
+ * @param rh
+ * @param fillColor
  */
 export const drawRect = function (context: CanvasRenderingContext2D, rx: number, ry: number, rw: number, rh: number, fillColor = 'red') {
     // 将canvas状态放入栈中
@@ -118,17 +118,6 @@ export const drawEllipse = function (context: CanvasRenderingContext2D, x: numbe
     // context.fill();
     context.restore();
 }
-// function(ctx: CanvasRenderingContext2D, x:number, y:number, a:number, b:number) {
-//     const step = (a > b) ? 1 / a : 1 / b;
-//     ctx.beginPath();
-//     ctx.moveTo(x + a, y);
-//     for (let i = 0; i < 2 * Math.PI; i += step) {
-//         ctx.lineTo(x + a * Math.cos(i), y + b * Math.sin(i));
-//     }
-//     ctx.closePath();
-//     // ctx.fillStyle = "rgba(0,0,0,.2)";
-//     ctx.fill();
-// }
 
 /**
  * 绘制曲线或者线段什么的
@@ -148,15 +137,8 @@ export const drawLine = function (context: CanvasRenderingContext2D, option: any
 
 /**
  * 根据传值进行不同的渲染样式
- * @param option 
+ * @param option
  */
 export const drawByMouse = function (option: any) {
 
 }
-
-// ctx.beginPath();
-//     ctx.moveTo(option.pos[0].x, option.pos[0].y);
-// [{ x: 25, y: 9 }, { x: 68, y: 7 }, { x: 82, y: 9 }, { x: 93, y: 12 }, { x: 102, y: 14 }, { x: 109, y: 25 }, { x: 111, y: 34 }, { x: 90, y: 48 }, { x: 66, y: 60 }, { x: 12, y: 59 }, { x: 2, y: 40 }, { x: 17, y: 28 }, { x: 61, y: 17 }, { x: 79, y: 21 }, { x: 84, y: 32 }, { x: 47, y: 59 }, { x: 5, y: 46 }, { x: 19, y: 16 }, { x: 74, y: 10 }, { x: 86, y: 12 }].forEach(item=>{
-//     ctx.lineTo(item.x,item.y)
-// })
-// ctx.stroke();

@@ -10,6 +10,10 @@
       "dom",
       "es7"
     ],
+    "baseUrl": "./",
+    "paths": {
+      "*": ["types/*"]
+    },
     "strict": true,
     "esModuleInterop": true,
     "outDir": "out-tsc",

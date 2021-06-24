@@ -1,7 +1,7 @@
 /**
  * 根据无论是元素还是id都拿到对应元素
  * @param id 元素或者id
- * @returns 
+ * @returns
  */
 export const GetElement = function (id: string | HTMLElement): HTMLElement {
     let ele;
@@ -12,7 +12,6 @@ export const GetElement = function (id: string | HTMLElement): HTMLElement {
         ele = id
     }
     console.log('ele',ele);
-    
     if (!ele) throw new Error("is not a HtmlElement");
     return ele
 }
@@ -20,7 +19,7 @@ export const GetElement = function (id: string | HTMLElement): HTMLElement {
 /**
  * 返回鼠标事件的位置地方
  * @param e 返回常规事件的鼠标相对元素的位置
- * @returns 
+ * @returns
  */
 export function getCanvasPosition(e: MouseEvent) {
     return {
@@ -33,7 +32,7 @@ export function getCanvasPosition(e: MouseEvent) {
  * 计算事件的左上角右上角和中心
  * @param start 【x，y】
  * @param end 【x，y】
- * @returns 
+ * @returns
  */
 export function getEventPos(start: [x: number, y: number], end: [x: number, y: number]) {
     const obj = {
