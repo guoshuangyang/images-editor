@@ -13,22 +13,12 @@ import * as datas from './data'
 let { data, option, ctx, canvasImage } = datas
 
 export default class ImagesEditor {
-    // 数据
-    // private data: Data;
-    // 宽高
     private height: number;
     private width: number;
-    // 画笔工具
-    // private ctx: CanvasRenderingContext2D;
-    // 版本
     public version: string;
-    // 请求参数 可通过updateConfig方法修改
-    // private option: Options;
     // 更新配置，比如更新颜色，粗细
     updateConfig: Function;
     destroy: Function;
-    // canvasImage: HTMLCanvasElement;
-
     /**
      * 实例化编辑器对象
      * @param ele 元素id或者dom元素
